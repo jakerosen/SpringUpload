@@ -3,6 +3,9 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const client = require('./client');
+import axios from 'axios';
+// const api = require('./api');
+// import './api';
 
 const root = '/api';
 
@@ -57,6 +60,20 @@ class Upload extends React.Component {
     });
 
     // Option 3, axios
+    // ok this shit has to work somehow, but I can't figure out the confusing
+    // ass import and export styles of javascript. Unhelpfully, the guide
+    // I'm following did not provide an example of how our ApiService is
+    // imported.
+    // Alright, I got it working by skipping the extra file and simply using
+    // axios inline, thereby bypassing any need for import/export other than
+    // importing axios itself, which they did provide the import statement for.
+    // Notably, console.log(res.data) is an empty string for axios, but
+    // undefined for both fetch and client.
+    // axios.post("http://localhost:8080/api/upload", formData)
+    //   .then(res => {
+    //     console.log(res.data);
+    //     alert("File uploaded successfully.")
+    //   });
   }
 
   render() {
