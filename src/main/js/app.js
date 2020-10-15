@@ -30,26 +30,33 @@ class Upload extends React.Component {
     const formData = new FormData();
     // formData.append('file', this.state.selectedFile);
     formData.append('file', e.target.files[0]);
-    fetch('http://localhost:8080/api/upload', {
-      method: 'post',
-      body: formData
-    }).then(res => {
-      if(res.ok) {
-        console.log("k man");
-        console.log(res.data);
-        alert("File uploaded successfully.");
-      }
-    });
-    // client({
-    //   method: 'POST',
-    //   // method: 'GET',
-    //   path: '/api/upload',
-    //   body: formData,
-    //   headers: {'Content-Type': 'multipart/form-data'}
-    // }).done(res => {
-    //   console.log(res.data);
-    //   alert("File uploaded successfully.");
+
+    // Options for sending the data:
+    //
+    // Option 1, fetch
+    // fetch('http://localhost:8080/api/upload', {
+    //   method: 'post',
+    //   body: formData
+    // }).then(res => {
+    //   if(res.ok) {
+    //     console.log("k man");
+    //     console.log(res.data);
+    //     alert("File uploaded successfully.");
+    //   }
     // });
+
+    // Option 2, client
+    client({
+      method: 'POST',
+      path: '/api/upload',
+      entity: formData,
+      headers: {'Content-Type': 'multipart/form-data'}
+    }).done(res => {
+      console.log(res.data);
+      alert("File uploaded successfully.");
+    });
+
+    // Option 3, axios
   }
 
   render() {
