@@ -4,8 +4,15 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const client = require('./client');
 import axios from 'axios';
+import Dropzone from 'react-dropzone';
+
+// const DropZone = require('dropzone');
 // const api = require('./api');
 // import './api';
+
+import {useMemo} from 'react';
+import {useCallback} from 'react';
+import {useDropzone} from 'react-dropzone';
 
 const root = '/api';
 
@@ -21,7 +28,24 @@ class Upload extends React.Component {
   constructor(props) {
     super(props);
     // this.state = { selectedFile: null };
+    this.onFileDrop = this.onFileDrop.bind(this);
     this.onFileChangeHandler = this.onFileChangeHandler.bind(this);
+  }
+
+  onFileDrop(inputFile) {
+    const formData = new FormData();
+    formData.append('file', inputFile[0]);
+    console.log(inputFile);
+
+    client({
+      method: 'POST',
+      path: '/api/upload',
+      entity: formData,
+      headers: {'Content-Type': 'multipart/form-data'}
+    }).done(res => {
+      console.log(res.data);
+      alert("File uploaded successfully.");
+    });
   }
 
   onFileChangeHandler(e) {
@@ -33,6 +57,8 @@ class Upload extends React.Component {
     const formData = new FormData();
     // formData.append('file', this.state.selectedFile);
     formData.append('file', e.target.files[0]);
+
+    console.log(e.target.files[0]); // perfect!
 
     // Options for sending the data:
     //
@@ -74,21 +100,26 @@ class Upload extends React.Component {
     //     console.log(res.data);
     //     alert("File uploaded successfully.")
     //   });
+
   }
 
   render() {
     return(
-      <div className="container">
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group files color">
-              <label>Upload Your File </label>
-              <input type="file" className="form-control" name="file"
-                onChange={this.onFileChangeHandler}/>
+      <Dropzone
+        accept="image/*"
+        onDrop={this.onFileDrop}
+      >
+        {({getRootProps, getInputProps}) => (
+          <section>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <div className='fileDrop'>
+                Drag a file here or click to upload.
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </section>
+        )}
+      </Dropzone>
     )
   }
 }
