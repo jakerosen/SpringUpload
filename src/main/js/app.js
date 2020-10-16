@@ -33,19 +33,28 @@ class Upload extends React.Component {
   }
 
   onFileDrop(inputFile) {
-    const formData = new FormData();
-    formData.append('file', inputFile[0]);
-    console.log(inputFile);
+    fetch("https://api.ipify.org?format=json")
+      .then(response => {
+        return response.json();
+      }, "jsonp")
+      .then(res => {
+        const formData = new FormData();
+        formData.append('file', inputFile[0]);
+        formData.append('ip', res.ip);
+        console.log(inputFile);
+        console.log(res.ip);
 
-    client({
-      method: 'POST',
-      path: '/api/upload',
-      entity: formData,
-      headers: {'Content-Type': 'multipart/form-data'}
-    }).done(res => {
-      console.log(res.data);
-      alert("File uploaded successfully.");
-    });
+        client({
+          method: 'POST',
+          path: '/api/upload',
+          entity: formData,
+          headers: {'Content-Type': 'multipart/form-data'}
+        }).done(res => {
+          console.log(res.data);
+          alert("File uploaded successfully.");
+        });
+      })
+      .catch(err => console.log(err));
   }
 
   onFileChangeHandler(e) {
